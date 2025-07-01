@@ -86,9 +86,13 @@ export function HeaderMenu({
  * @param {Pick<HeaderProps, 'isLoggedIn' | 'cart'>}
  */
 function HeaderCtas({isLoggedIn, cart}) {
+  const rootData = useRouteLoaderData('root');
+  const currentLanguage = rootData?.consent?.language || 'EN';
+  
   return (
     <nav className="header-ctas" role="navigation">
       <HeaderMenuMobileToggle />
+      <LanguageSwitcher currentLanguage={currentLanguage} />
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
         <Suspense fallback="Sign in">
           <Await resolve={isLoggedIn} errorElement="Sign in">

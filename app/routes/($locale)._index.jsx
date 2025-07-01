@@ -2,6 +2,7 @@ import {Await, useLoaderData, Link} from 'react-router';
 import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
 import {ProductItem} from '~/components/ProductItem';
+import {LOCALES} from '~/lib/utils';
 
 /**
  * @type {MetaFunction}
@@ -14,6 +15,19 @@ export const meta = () => {
  * @param {LoaderFunctionArgs} args
  */
 export async function loader(args) {
+  const {params} = args;
+  
+  // Validate locale parameter if present
+  if (params.locale) {
+    const isValidLocale = Object.values(LOCALES).some(
+      locale => locale.pathPrefix === `/${params.locale}`
+    );
+    
+    if (!isValidLocale) {
+      throw new Response(null, {status: 404, statusText: 'Not Found'});
+    }
+  }
+
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
 
@@ -30,7 +44,12 @@ export async function loader(args) {
  */
 async function loadCriticalData({context}) {
   const [{collections}] = await Promise.all([
-    context.storefront.query(FEATURED_COLLECTION_QUERY),
+    context.storefront.query(FEATURED_COLLECTION_QUERY, {
+      variables: {
+        country: context.storefront.i18n.country,
+        language: context.storefront.i18n.language,
+      },
+    }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
@@ -47,7 +66,12 @@ async function loadCriticalData({context}) {
  */
 function loadDeferredData({context}) {
   const recommendedProducts = context.storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY)
+    .query(RECOMMENDED_PRODUCTS_QUERY, {
+      variables: {
+        country: context.storefront.i18n.country,
+        language: context.storefront.i18n.language,
+      },
+    })
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render
       console.error(error);

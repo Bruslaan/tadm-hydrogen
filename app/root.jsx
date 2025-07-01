@@ -13,6 +13,7 @@ import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
+import i18nStyles from '~/styles/i18n.css?url';
 import {PageLayout} from './components/PageLayout';
 
 /**
@@ -55,6 +56,7 @@ export function links() {
       href: 'https://shop.app',
     },
     {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    {rel: 'stylesheet', href: i18nStyles},
   ];
 }
 
@@ -102,6 +104,8 @@ async function loadCriticalData({context}) {
       cache: storefront.CacheLong(),
       variables: {
         headerMenuHandle: 'main-menu', // Adjust to your header menu handle
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
       },
     }),
     // Add other queries here, so that they are loaded in parallel
@@ -125,6 +129,8 @@ function loadDeferredData({context}) {
       cache: storefront.CacheLong(),
       variables: {
         footerMenuHandle: 'footer', // Adjust to your footer menu handle
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
       },
     })
     .catch((error) => {
@@ -148,7 +154,7 @@ export function Layout({children}) {
   const data = useRouteLoaderData('root');
 
   return (
-    <html lang="en">
+    <html lang={data?.consent?.language?.toLowerCase() || 'en'}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
