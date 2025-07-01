@@ -1,7 +1,8 @@
 import {Suspense} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
+import {Await, NavLink, useAsyncValue, useRouteLoaderData} from 'react-router';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
+import {LanguageSwitcher} from '~/components/LanguageSwitcher';
 
 /**
  * @param {HeaderProps}
