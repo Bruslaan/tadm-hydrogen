@@ -88,7 +88,7 @@ export function HeaderMenu({
  */
 function HeaderCtas({isLoggedIn, cart}) {
   const rootData = useRouteLoaderData('root');
-  const currentLanguage = rootData?.consent?.language || 'EN';
+  const currentLanguage = rootData?.locale?.language || 'EN';
   
   return (
     <nav className="header-ctas" role="navigation">

@@ -1,7 +1,8 @@
-import {Await, useLoaderData, Link} from 'react-router';
+import {Await, useLoaderData} from 'react-router';
 import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
 import {ProductItem} from '~/components/ProductItem';
+import {LocalizedLink} from '~/components/LocalizedLink';
 import {LOCALES} from '~/lib/utils';
 
 /**
@@ -103,7 +104,7 @@ function FeaturedCollection({collection}) {
   if (!collection) return null;
   const image = collection?.image;
   return (
-    <Link
+    <LocalizedLink
       className="featured-collection"
       to={`/collections/${collection.handle}`}
     >
@@ -113,7 +114,7 @@ function FeaturedCollection({collection}) {
         </div>
       )}
       <h1>{collection.title}</h1>
-    </Link>
+    </LocalizedLink>
   );
 }
 

@@ -70,7 +70,7 @@ export async function loader(args) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  const {storefront, env} = args.context;
+  const {storefront, env, locale} = args.context;
 
   return {
     ...deferredData,
@@ -85,9 +85,10 @@ export async function loader(args) {
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
       withPrivacyBanner: false,
       // localize the privacy banner
-      country: args.context.storefront.i18n.country,
-      language: args.context.storefront.i18n.language,
+      country: storefront.i18n.country,
+      language: storefront.i18n.language,
     },
+    locale,
   };
 }
 
@@ -153,8 +154,11 @@ export function Layout({children}) {
   /** @type {RootLoader} */
   const data = useRouteLoaderData('root');
 
+  const locale = data?.locale;
+  const langAttribute = locale ? `${locale.language.toLowerCase()}-${locale.country}` : 'en';
+  
   return (
-    <html lang={data?.consent?.language?.toLowerCase() || 'en'}>
+    <html lang={langAttribute}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
