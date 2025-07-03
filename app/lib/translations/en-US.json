@@ -1,0 +1,29 @@
+{
+  "buttons": {
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "checkout": "Checkout",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "close": "Close",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "remove": "Remove",
+    "update": "Update",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "viewAll": "View All",
+    "viewMore": "View More",
+    "viewLess": "View Less",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "forgotPassword": "Forgot Password"
+  }
+}
