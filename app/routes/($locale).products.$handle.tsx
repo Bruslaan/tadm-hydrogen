@@ -1,4 +1,4 @@
-import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from 'react-router';
 import {
   getSelectedProductOptions,
@@ -12,13 +12,23 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {WithLocale, DEFAULT_LOCALE} from '~/lib/i18n';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = (args) => {
+  const rootMatch = args.matches.at(0) ?? null;
+  const selectedLocale =
+    (rootMatch?.data as WithLocale)?.selectedLocale ?? null;
+
+  const prefix = (
+    selectedLocale?.pathPrefix ?? DEFAULT_LOCALE.pathPrefix
+  ).replace(/\/+$/, '');
+  const href = `${prefix}/products/${args.data?.product.handle}`;
+
   return [
-    {title: `Hydrogen | ${data?.product.title ?? ''}`},
+    {title: `Hydrogen | ${args.data?.product.title ?? ''}`},
     {
       rel: 'canonical',
-      href: `/products/${data?.product.handle}`,
+      href,
     },
   ];
 };
@@ -38,10 +48,10 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({
-  context,
-  params,
-  request,
-}: LoaderFunctionArgs) {
+                                  context,
+                                  params,
+                                  request,
+                                }: LoaderFunctionArgs) {
   const {handle} = params;
   const {storefront} = context;
 
@@ -51,7 +61,12 @@ async function loadCriticalData({
 
   const [{product}] = await Promise.all([
     storefront.query(PRODUCT_QUERY, {
-      variables: {handle, selectedOptions: getSelectedProductOptions(request)},
+      variables: {
+        handle,
+        selectedOptions: getSelectedProductOptions(request),
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
+      },
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);

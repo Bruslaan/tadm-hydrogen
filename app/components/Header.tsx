@@ -7,6 +7,7 @@ import {
 } from '@shopify/hydrogen';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
+import {CountrySelector} from '~/components/CountrySelector';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -29,6 +30,7 @@ export function Header({
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
         <strong>{shop.name}</strong>
       </NavLink>
+      <CountrySelector />
       <HeaderMenu
         menu={menu}
         viewport="desktop"

@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link, type MetaFunction} from 'react-router';
+import {Await, useLoaderData, type MetaFunction} from 'react-router';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import type {
@@ -7,6 +7,7 @@ import type {
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
+import {Link} from '~/components/Link';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -67,8 +68,8 @@ export default function Homepage() {
 }
 
 function FeaturedCollection({
-  collection,
-}: {
+                              collection,
+                            }: {
   collection: FeaturedCollectionFragment;
 }) {
   if (!collection) return null;
@@ -89,8 +90,8 @@ function FeaturedCollection({
 }
 
 function RecommendedProducts({
-  products,
-}: {
+                               products,
+                             }: {
   products: Promise<RecommendedProductsQuery | null>;
 }) {
   return (
@@ -102,8 +103,8 @@ function RecommendedProducts({
             <div className="recommended-products-grid">
               {response
                 ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
+                  <ProductItem key={product.id} product={product} />
+                ))
                 : null}
             </div>
           )}

@@ -1,22 +1,80 @@
-import type {I18nBase} from '@shopify/hydrogen';
+import {useMatches} from 'react-router';
+import {
+  CountryCode as CustomerCountryCode,
+} from '@shopify/hydrogen/customer-account-api-types';
+import {
+  CountryCode as StorefrontCountryCode,
+  LanguageCode as StorefrontLanguageCode,
+} from '@shopify/hydrogen/storefront-api-types';
 
-export interface I18nLocale extends I18nBase {
+type LanguageCode = any & StorefrontLanguageCode;
+type CountryCode = CustomerCountryCode & StorefrontCountryCode;
+
+export type Locale = {
+  language: LanguageCode;
+  country: CountryCode;
   pathPrefix: string;
+};
+
+export const DEFAULT_LOCALE: Locale = {
+  language: 'EN',
+  country: 'US',
+  pathPrefix: '/',
+};
+
+export const SUPPORTED_LOCALES: Locale[] = [
+  DEFAULT_LOCALE,
+  {language: 'EN', country: 'CA', pathPrefix: '/EN-CA'},
+  {language: 'FR', country: 'CA', pathPrefix: '/FR-CA'},
+  {language: 'FR', country: 'FR', pathPrefix: '/FR-FR'},
+];
+
+const RE_LOCALE_PREFIX = /^[A-Z]{2}-[A-Z]{2}$/i;
+
+function getFirstPathPart(url: URL): string | null {
+  return (
+    url.pathname
+      // take the first part of the pathname (split by /)
+      .split('/')
+      .at(1)
+      // replace the .data suffix, if present
+      ?.replace(/\.data$/, '')
+      // normalize to uppercase
+      ?.toUpperCase() ?? null
+  );
 }
 
-export function getLocaleFromRequest(request: Request): I18nLocale {
-  const url = new URL(request.url);
-  const firstPathPart = url.pathname.split('/')[1]?.toUpperCase() ?? '';
+export function getLocaleFromRequest(request: Request): Locale {
+  const firstPathPart = getFirstPathPart(new URL(request.url));
 
-  type I18nFromUrl = [I18nLocale['language'], I18nLocale['country']];
+  type LocaleFromUrl = [Locale['language'], Locale['country']];
 
   let pathPrefix = '';
-  let [language, country]: I18nFromUrl = ['EN', 'US'];
 
-  if (/^[A-Z]{2}-[A-Z]{2}$/i.test(firstPathPart)) {
-    pathPrefix = '/' + firstPathPart;
-    [language, country] = firstPathPart.split('-') as I18nFromUrl;
+  // If the first path part is not a valid locale, return the default locale
+  if (firstPathPart == null || !RE_LOCALE_PREFIX.test(firstPathPart)) {
+    return DEFAULT_LOCALE;
   }
 
+  pathPrefix = '/' + firstPathPart;
+  const [language, country] = firstPathPart.split('-') as LocaleFromUrl;
   return {language, country, pathPrefix};
+}
+
+export interface WithLocale {
+  selectedLocale: Locale;
+}
+
+export function useSelectedLocale(): Locale | null {
+  const [root] = useMatches();
+  const {selectedLocale} = root.data as WithLocale;
+
+  return selectedLocale ?? null;
+}
+
+export function localeMatchesPrefix(localeSegment: string | null): boolean {
+  const prefix = '/' + (localeSegment ?? '');
+  return SUPPORTED_LOCALES.some((supportedLocale) => {
+    return supportedLocale.pathPrefix.toUpperCase() === prefix.toUpperCase();
+  });
 }
