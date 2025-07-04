@@ -26,7 +26,7 @@ export const SUPPORTED_LOCALES: Locale[] = [
   DEFAULT_LOCALE,
   {language: 'EN', country: 'CA', pathPrefix: '/EN-CA'},
   {language: 'FR', country: 'CA', pathPrefix: '/FR-CA'},
-  {language: 'FR', country: 'FR', pathPrefix: '/FR-FR'},
+  {language: 'DE', country: 'DE', pathPrefix: '/de-De'},
 ];
 
 const RE_LOCALE_PREFIX = /^[A-Z]{2}-[A-Z]{2}$/i;

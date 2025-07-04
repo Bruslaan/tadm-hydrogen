@@ -7,5 +7,6 @@ export function Link({...props}: LinkProps) {
   const prefix = selectedLocale?.pathPrefix.replace(/\/+$/, '') ?? '';
   const to = `${prefix}${props.to}`;
 
+
   return <ReactLink {...props} to={to} />;
 }

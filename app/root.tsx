@@ -78,6 +78,7 @@ export async function loader(args: LoaderFunctionArgs) {
   return {
     ...deferredData,
     ...criticalData,
+    selectedLocale: args.context.storefront.i18n,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
     shop: getShopAnalytics({
       storefront,

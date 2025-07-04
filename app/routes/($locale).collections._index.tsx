@@ -1,4 +1,5 @@
-import {useLoaderData, Link} from 'react-router';
+import {useLoaderData} from 'react-router';
+import {Link} from '~/components/Link';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {getPaginationVariables, Image} from '@shopify/hydrogen';
 import type {CollectionFragment} from 'storefrontapi.generated';

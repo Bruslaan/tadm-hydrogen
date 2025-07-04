@@ -1,5 +1,6 @@
 import {Suspense} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
+import {Link} from '~/components/Link';
 import {
   type CartViewPayload,
   useAnalytics,
@@ -27,9 +28,9 @@ export function Header({
   const {shop, menu} = header;
   return (
     <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
+      <Link to="/">
         <strong>{shop.name}</strong>
-      </NavLink>
+      </Link>
       <CountrySelector />
       <HeaderMenu
         menu={menu}
