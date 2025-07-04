@@ -1,5 +1,5 @@
 import {LinkProps, Link as ReactLink} from 'react-router';
-import {useSelectedLocale} from '../lib/i18n';
+import {useSelectedLocale} from '~/lib/i18n';
 
 export function Link({...props}: LinkProps) {
   const selectedLocale = useSelectedLocale();
