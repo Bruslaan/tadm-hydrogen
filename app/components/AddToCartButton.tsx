@@ -21,6 +21,8 @@ export function AddToCartButton({
     ? getTranslation(selectedLocale, 'product.addToCart')
     : 'Add to Cart';
 
+  console.log(`AddToCartButton rendered with lines:`, defaultText);
+
   return (
     <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
       {(fetcher: FetcherWithComponents<any>) => (

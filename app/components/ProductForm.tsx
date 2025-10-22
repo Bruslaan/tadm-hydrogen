@@ -8,6 +8,8 @@ import type {
 import {AddToCartButton} from './AddToCartButton';
 import {useAside} from './Aside';
 import type {ProductFragment} from 'storefrontapi.generated';
+import {getTranslation} from '~/lib/translations';
+import {useSelectedLocale, DEFAULT_LOCALE} from '~/lib/i18n';
 
 export function ProductForm({
   productOptions,
@@ -17,6 +19,7 @@ export function ProductForm({
   selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
 }) {
   const navigate = useNavigate();
+  const selectedLocale = useSelectedLocale();
   const {open} = useAside();
   return (
     <div className="product-form">
@@ -119,7 +122,7 @@ export function ProductForm({
             : []
         }
       >
-        {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
+        {selectedVariant?.availableForSale ? getTranslation(selectedLocale || DEFAULT_LOCALE, 'product.addToCart') : getTranslation(selectedLocale || DEFAULT_LOCALE, 'product.outOfStock')}
       </AddToCartButton>
     </div>
   );

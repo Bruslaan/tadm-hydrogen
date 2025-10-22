@@ -1,13 +1,13 @@
 import enTranslations from './translations/EN.json';
 import deTranslations from './translations/DE.json';
-import type { Locale } from './i18n';
+import type {Locale} from './i18n';
 
 export const translations = {
   'en': enTranslations,
   'de': deTranslations,
 } as const;
 
-export type TranslationKey = 
+export type TranslationKey =
   | keyof typeof enTranslations
   | `${keyof typeof enTranslations}.${string}`;
 
@@ -19,12 +19,11 @@ export type SupportedLanguage = keyof typeof translations;
 export function getTranslation(
   locale: Locale,
   key: string,
-  fallback?: string
+  fallback?: string,
 ): string {
-  const langCode = getLanguageCode(locale);
+  const langCode = locale.language.toLowerCase() as SupportedLanguage;
   const localeTranslations = translations[langCode] || translations['en'];
-  
-  // Handle nested keys (e.g., "common.home")
+
   const keys = key.split('.');
   let value: any = localeTranslations;
   
@@ -59,7 +58,8 @@ export function getTranslation(
  */
 export function useTranslation(locale: Locale) {
   return {
-    t: (key: string, fallback?: string) => getTranslation(locale, key, fallback),
+    t: (key: string, fallback?: string) =>
+      getTranslation(locale, key, fallback),
   };
 }
 
@@ -71,7 +71,7 @@ function getLanguageCode(locale: Locale): SupportedLanguage {
   if (locale.pathPrefix === '/') {
     return 'en'; // Default locale
   }
-  
+
   const code = locale.pathPrefix.slice(1).split('-')[0].toLowerCase(); // Remove '/' and get first part
   return (code as SupportedLanguage) || 'en';
 }
@@ -79,7 +79,9 @@ function getLanguageCode(locale: Locale): SupportedLanguage {
 /**
  * Check if a language is supported
  */
-export function isLanguageSupported(langCode: string): langCode is SupportedLanguage {
+export function isLanguageSupported(
+  langCode: string,
+): langCode is SupportedLanguage {
   return langCode in translations;
 }
 
